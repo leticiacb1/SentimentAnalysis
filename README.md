@@ -89,8 +89,8 @@ $ apt update
 $ apt install python3.12 python3-pip zip
 
 # Create folder to install dependencies:
-$ mkdir -p layer/python/lib/python3.10/site-packages
-$ pip3 install textblob -t layer/python/lib/python3.10/site-packages
+$ mkdir -p layer/python/lib/python3.12/site-packages
+$ pip3 install textblob -t layer/python/lib/python3.12/site-packages
 
 # Create a .zip with the dependencies:
 $ cd layer

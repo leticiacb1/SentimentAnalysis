@@ -11,7 +11,7 @@ class LambdaFunction():
 
         self.layer_version  = None
 
-        self.runtime = "python3.9"
+        self.runtime = "python3.12"
 
         # Load environment variables
         self.config = Config()
@@ -135,8 +135,8 @@ class LambdaFunction():
         if(self.lambda_client):
             # Fetch the layer version ARN based on the layer name
             response = self.lambda_client.list_layer_versions(
-                CompatibleRuntime="python3.10",  # Provide the compatible runtime of the layer
-                LayerName=layer_name,
+                CompatibleRuntime= self.runtime,  # Provide the compatible runtime of the layer
+                LayerName=layer_name,             # Must be the same runtime as lambda function
             )
 
             if "LayerVersions" in response:
