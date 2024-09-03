@@ -101,17 +101,21 @@ class Gateway():
             print(f"             - {api['Name']} ({api['ApiEndpoint']})")
     
     def cleanup(self, api_name: str) -> None:
-        response = self.api_gateway.get_apis(MaxResults="2000")
-        api_gateway_id = None
 
-        for item in response["Items"]:
-            if item["Name"] == api_name:
-                api_gateway_id = item["ApiId"]
-                break
+        if(self.api_gateway):
+            response = self.api_gateway.get_apis(MaxResults="2000")
+            api_gateway_id = None
 
-        # Delete the API Gateway
-        if api_gateway_id:
-            self.api_gateway.delete_api(ApiId=api_gateway_id)
-            print(f"\n    [INFO] API Gateway '{api_name}' deleted successfully. \n")
+            for item in response["Items"]:
+                if item["Name"] == api_name:
+                    api_gateway_id = item["ApiId"]
+                    break
+
+            # Delete the API Gateway
+            if api_gateway_id:
+                self.api_gateway.delete_api(ApiId=api_gateway_id)
+                print(f"\n    [INFO] API Gateway '{api_name}' deleted successfully. \n")
+            else:
+                print(f"\n    [INFO] API Gateway '{api_name}' not found. \n")
         else:
-            print(f"\n    [INFO] API Gateway '{api_name}' not found. \n")
+            print(f"\n    [INFO] No gateway to delete. \n")

@@ -124,28 +124,35 @@ class LambdaFunction():
             print(f"           {function_name}")
 
     def _delete_function(self, function_name: str) -> None:
-        self.lambda_client.delete_function(FunctionName=function_name)
-        print(f"\n    [INFO] Lambda function {function_name} deleted successfully. \n")
+
+        if(self.lambda_client):
+            self.lambda_client.delete_function(FunctionName=function_name)
+            print(f"\n    [INFO] Lambda function {function_name} deleted successfully. \n")
+        else:
+            print(f"\n    [INFO] No Lambda function to delete. \n")
 
     def _delete_layer(self, layer_name: str) -> None:
-        # Fetch the layer version ARN based on the layer name
-        response = self.lambda_client.list_layer_versions(
-            CompatibleRuntime="python3.10",  # Provide the compatible runtime of the layer
-            LayerName=layer_name,
-        )
+        if(self.lambda_client):
+            # Fetch the layer version ARN based on the layer name
+            response = self.lambda_client.list_layer_versions(
+                CompatibleRuntime="python3.10",  # Provide the compatible runtime of the layer
+                LayerName=layer_name,
+            )
 
-        if "LayerVersions" in response:
-            layer_versions = response["LayerVersions"]
+            if "LayerVersions" in response:
+                layer_versions = response["LayerVersions"]
 
-            # Delete each layer version
-            for version in layer_versions:
-                self.lambda_client.delete_layer_version(
-                    LayerName=layer_name, VersionNumber=version["Version"]
-                )
+                # Delete each layer version
+                for version in layer_versions:
+                    self.lambda_client.delete_layer_version(
+                        LayerName=layer_name, VersionNumber=version["Version"]
+                    )
 
-            print(f"\n    [INFO] Deleted all versions of layer '{layer_name}'. \n")
+                print(f"\n    [INFO] Deleted all versions of layer '{layer_name}'. \n")
+            else:
+                print(f"\n    [INFO] No layer with the name '{layer_name}' found. \n")
         else:
-            print(f"\n    [INFO] No layer with the name '{layer_name}' found. \n")
+            print(f"\n    [INFO] No Layer to delete. \n")
 
     def cleanup(self, function_name: str, layer_name: str) -> None:
 
